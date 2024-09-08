@@ -6,7 +6,7 @@ export const registerFormConfig = {
   },
   fields: [
     { name: "name", label: "Username", type: "text" },
-    { name: "email", label: "Email", type: "text" },
+    { name: "email", label: "Email", type: "email" },
     { name: "password", label: "Password", type: "password" },
   ],
 };
