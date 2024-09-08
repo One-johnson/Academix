@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 
 // Load environment variables
@@ -15,15 +15,5 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Test the database connection
-pool.getConnection((err, connection) => {
-  if (err) {
-    console.error('Database connection failed:', err.stack);
-    return;
-  }
-  console.log('Connected to the database.');
-  connection.release(); // Release the connection back to the pool
-});
-
 // Export the connection pool
-module.exports = pool.promise();
+module.exports = pool;

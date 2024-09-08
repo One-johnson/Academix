@@ -5,6 +5,7 @@ import Logo from "../../images/school.png";
 import { registerFormConfig } from "../../formConfig/formConfig";
 import { registerValidationSchema } from "../../validation/validationSchema";
 import "primeicons/primeicons.css";
+import axios from 'axios';
 
 const Register = () => {
   return (
@@ -27,47 +28,61 @@ const Register = () => {
           <Formik
             initialValues={registerFormConfig.initialValues}
             validationSchema={registerValidationSchema}
-            onSubmit={(values) => {
-              // Handle form submission here (e.g., API call)
-              console.log(values);
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              setSubmitting(true);
+
+              axios.post('/http://localhost:5173/', values)
+                .then((response) => {
+                  // Handle successful registration
+                  console.log('Registration successful:', response.data);
+                  setSubmitting(false);
+                  resetForm(); // Reset the form fields
+                })
+                .catch((error) => {
+                  // Handle errors
+                  console.error('Registration error:', error);
+                  setSubmitting(false);
+                });
             }}
           >
-            {({ errors, touched }) => (
+            {({ errors, touched, isSubmitting }) => (
               <Form>
                 <Field
                   name="name"
                   type="text"
                   component={InputText}
                   placeholder="Name"
-                  className="w-full px-3 py-2 border rounded-lg"
+                  className="w-full px-3 py-2 border-2 rounded-md border-gray-300 outline-none focus:outline-none"
                 />
                 {errors.name && touched.name && (
-                  <span className="text-red-500">{errors.name}</span>
+                  <span className="text-red-500 text-sm font-semibold">{errors.name}</span>
                 )}
                 <Field
-                  name="email"
+                  name="email" 
                   type="email"
                   component={InputText}
                   placeholder="Email"
-                  className="w-full px-3 py-2 border rounded-lg mt-2"
+                  className="w-full px-3 py-2 border-2 rounded-md mt-4 border-gray-300 outline-none focus:outline-none"
                 />
                 {errors.email && touched.email && (
-                  <span className="text-red-500">{errors.email}</span>
+                  <span className="text-red-500 text-sm font-semibold">{errors.email}</span>
                 )}
                 <Field
                   name="password"
                   type="password"
                   component={InputText}
                   placeholder="Password"
-                  className="w-full px-3 py-2 border rounded-lg mt-2"
+                  className="w-full px-3 py-2 border-2 rounded-md mt-4 border-gray-300 outline-none focus:outline-none"
                 />
                 {errors.password && touched.password && (
-                  <span className="text-red-500">{errors.password}</span>
+                  <span className="text-red-500 text-sm font-semibold">{errors.password}</span>
                 )}
                 <Button
                   label="Register"
                   type="submit"
-                  className="w-full bg-blue-500 text-white font-bold py-2 rounded-lg mt-4"
+                  disabled={isSubmitting} // Disable button while submitting
+                  className="bg-violet-900 text-white py-2 px-4 rounded-lg w-full hover:bg-violet-600 transition duration-300 
+                  mt-5 font-bold text-lg mb-3 uppercase"
                 />
               </Form>
             )}
