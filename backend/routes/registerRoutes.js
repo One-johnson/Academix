@@ -1,7 +1,6 @@
-// routes/authRoutes.js
-
+// routes/registerRoutes.js
 const express = require("express");
-const { registerUser } = require("../controllers/registerController"); // Import the controller
+const { registerUser } = require("../controllers/registerController");
 
 const router = express.Router();
 
