@@ -1,14 +1,51 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { registerValidationSchema } from "../../components/validation/validationSchema"; // Import the validation schema
-import { registerInitialValues } from "../../components/formConfig/formConfig"; // Import the initial values
-import Logo from "../../images/school.png"; // Import the logo image
+import { ProgressSpinner } from "primereact/progressspinner";
+import { registerValidationSchema } from "../../components/validation/validationSchema";
+import { registerInitialValues } from "../../components/formConfig/formConfig";
+import Logo from "../../images/school.png";
+import axios from "axios";
+
+const fieldStyle =
+  "border-2 border-gray-300 rounded-lg w-full py-2 px-3 focus:outline-none focus:border-violet-800 transition duration-300 focus:border-2 hover:border-gray-500 hover:border-2";
 
 const Register = () => {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // State to store error messages
+  const navigate = useNavigate();
+
   // Form submission handler
-  const handleSubmit = (values) => {
-    console.log("Form values:", values);
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    setErrorMessage(""); // Reset error message before API call
+
+    try {
+      // API call to register the user
+      const response = await axios.post(
+        "http://localhost:5000/api/register",
+        values
+      );
+
+      if (response.status === 201) {
+        console.log("Registration successful:", response.data.message);
+        // Navigate to login page after successful registration
+        navigate("/login");
+      } else {
+        console.error("Unexpected response:", response);
+        setErrorMessage("Unexpected error occurred. Please try again.");
+      }
+    } catch (error) {
+      console.error("Registration failed:", error);
+      setErrorMessage(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
+    } finally {
+      setLoading(false); // Stop loading spinner
+    }
   };
 
   return (
@@ -33,65 +70,82 @@ const Register = () => {
             onSubmit={handleSubmit}
           >
             {({ isSubmitting }) => (
-              <Form className="flex flex-col gap-4">
+              <Form className="flex flex-col gap-5">
                 {/* Username Field */}
-                <div className="p-float-label">
-                  <Field
-                    name="username"
-                    as={InputText}
-                    id="username"
-                    className="w-full"
-                  />
-                  <label htmlFor="username">Username</label>
+                <div className="flex items-center">
+                  <div className="p-float-label flex-1">
+                    <Field
+                      name="username"
+                      as={InputText}
+                      id="username"
+                      className={fieldStyle}
+                    />
+                    <label htmlFor="username">Username</label>
+                  </div>
                   <ErrorMessage
                     name="username"
                     component="small"
-                    className="p-error"
+                    className="p-error ml-2 text-red-600"
                   />
                 </div>
 
                 {/* Email Field */}
-                <div className="p-float-label">
-                  <Field
-                    name="email"
-                    as={InputText}
-                    id="email"
-                    className="w-full"
-                  />
-                  <label htmlFor="email">Email</label>
+                <div className="flex items-center">
+                  <div className="p-float-label flex-1">
+                    <Field
+                      name="email"
+                      as={InputText}
+                      id="email"
+                      className={fieldStyle}
+                    />
+                    <label htmlFor="email">Email</label>
+                  </div>
                   <ErrorMessage
                     name="email"
                     component="small"
-                    className="p-error"
+                    className="p-error ml-2 text-red-600"
                   />
                 </div>
 
                 {/* Password Field */}
-                <div className="p-float-label">
-                  <Field
-                    name="password"
-                    type="password"
-                    as={InputText}
-                    id="password"
-                    className="w-full"
-                  />
-                  <label htmlFor="password">Password</label>
+                <div className="flex items-center">
+                  <div className="p-float-label flex-1">
+                    <Field
+                      name="password"
+                      type="password"
+                      as={InputText}
+                      id="password"
+                      className={fieldStyle}
+                    />
+                    <label htmlFor="password">Password</label>
+                  </div>
                   <ErrorMessage
                     name="password"
                     component="small"
-                    className="p-error"
+                    className="p-error ml-2 text-red-600"
                   />
                 </div>
 
-                {/* Submit Button */}
-                <Button
-                  type="submit"
-                  label="Register"
-                  icon="pi pi-user-plus"
-                  className="p-button-success w-full mt-4 bg-violet-900 transition duration-300 font-bold text-lg text-white px-4 py-2 rounded-md
-                  text white"
-                  disabled={isSubmitting}
-                />
+                {/* Error Message */}
+                {errorMessage && (
+                  <div className="text-red-600 text-center mb-4">
+                    {errorMessage}
+                  </div>
+                )}
+
+                {/* Submit Button or Spinner */}
+                {loading ? (
+                  <div className="flex justify-center items-center mt-4">
+                    <ProgressSpinner />
+                  </div>
+                ) : (
+                  <Button
+                    type="submit"
+                    label="Register"
+                    className="p-button-success w-full mt-4 bg-violet-900 transition duration-300 font-bold text-lg text-white px-4 py-2 rounded-md uppercase"
+                    disabled={isSubmitting}
+                  />
+                )}
               </Form>
             )}
           </Formik>
