@@ -1,70 +1,146 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { loginValidationSchema } from "../../components/validation/validationSchema"; // Import the validation schema
-import { loginInitialValues } from "../../components/formConfig/formConfig"; // Import the initial values
+import { ProgressSpinner } from "primereact/progressspinner";
+import { loginInitialValues } from "../../components/formConfig/formConfig";
+import { loginValidationSchema } from "../../components/validation/validationSchema";
+import Logo from "../../images/school.png";
+import axios from "axios";
+
+const fieldStyle =
+  "border-2 border-gray-300 rounded-lg w-full py-2 px-3 focus:outline-none focus:border-violet-800 transition duration-300 focus:border-2 hover:border-gray-500 hover:border-2";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
   // Form submission handler
-  const handleSubmit = (values) => {
-    // Handle form submission logic, e.g., call an API to login
-    console.log("Form values:", values);
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    setErrorMessage("");
+
+    try {
+      // Simulate a delay to show the loader for a longer time (e.g., 2 seconds)
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      // API call to login the user
+      const response = await axios.post(
+        "http://localhost:5000/api/login",
+        values
+      );
+
+      if (response.status === 200) {
+        console.log("Login successful:", response.data.message);
+        // Additional delay to keep the loader showing for a little longer
+        setTimeout(() => {
+          setLoading(false); // Stop the loading spinner
+          navigate("/dashboard");
+        }, 1500);
+      } else {
+        console.error("Unexpected response:", response);
+        setErrorMessage("Unexpected error occurred. Please try again.");
+        setLoading(false); // Stop loading spinner on error
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setErrorMessage(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
+      setLoading(false); // Stop loading spinner on error
+    }
   };
 
   return (
-    <div className="p-4 border rounded-md w-full max-w-md mx-auto mt-8">
-      <h2 className="text-xl font-semibold mb-4">Admin Login</h2>
-      <Formik
-        initialValues={loginInitialValues}
-        validationSchema={loginValidationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form className="flex flex-col gap-4">
-            {/* Email Field */}
-            <div className="p-float-label">
-              <Field
-                name="email"
-                as={InputText}
-                id="email"
-                className="w-full"
-              />
-              <label htmlFor="email">Email</label>
-              <ErrorMessage
-                name="email"
-                component="small"
-                className="p-error"
-              />
-            </div>
+    <div className="flex h-screen">
+      {/* Left side with Logo */}
+      <div className="w-4/5 bg-white flex justify-center items-center">
+        <div className="flex items-center justify-center flex-col">
+          <img src={Logo} alt="Logo" className="" />
+        </div>
+      </div>
 
-            {/* Password Field */}
-            <div className="p-float-label">
-              <Field
-                name="password"
-                type="password"
-                as={InputText}
-                id="password"
-                className="w-full"
-              />
-              <label htmlFor="password">Password</label>
-              <ErrorMessage
-                name="password"
-                component="small"
-                className="p-error"
-              />
-            </div>
+      {/* Right side with Form */}
+      <div className="w-2/5 bg-violet-900 flex justify-center items-center">
+        <div className="max-w-lg w-full p-6 bg-white rounded-xl mx-8 shadow-xl">
+          <div className="flex items-center justify-center text-violet-900 mb-6">
+            <i className="pi pi-sign-in mr-4 text-3xl" />
+            <h2 className="text-3xl font-bold">Admin Login</h2>
+          </div>
+          <Formik
+            initialValues={loginInitialValues}
+            validationSchema={loginValidationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form className="flex flex-col gap-5">
+                {/* Email Field */}
+                <div className="flex items-center">
+                  <div className="p-float-label flex-1">
+                    <Field
+                      name="username"
+                      as={InputText}
+                      id="username"
+                      className={fieldStyle}
+                    />
+                    <label htmlFor="username">Email</label>
+                  </div>
+                  <ErrorMessage
+                    name="username"
+                    component="small"
+                    className="p-error ml-2 text-red-600"
+                  />
+                </div>
 
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              label="Login"
-              icon="pi pi-sign-in"
-              className="p-button-primary w-full"
-              disabled={isSubmitting}
-            />
-          </Form>
-        )}
-      </Formik>
+                {/* Password Field */}
+                <div className="flex items-center">
+                  <div className="p-float-label flex-1">
+                    <Field
+                      name="password"
+                      type="password"
+                      as={InputText}
+                      id="password"
+                      className={fieldStyle}
+                    />
+                    <label htmlFor="password">Password</label>
+                  </div>
+                  <ErrorMessage
+                    name="password"
+                    component="small"
+                    className="p-error ml-2 text-red-600"
+                  />
+                </div>
+
+                {/* Error Message */}
+                {errorMessage && (
+                  <div className="text-red-600 text-center mb-4">
+                    {errorMessage}
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                {loading ? (
+                  <ProgressSpinner
+                    style={{ width: "50px", height: "50px" }}
+                    strokeWidth="8"
+                    fill="var(--surface-ground)"
+                    animationDuration=".5s"
+                  />
+                ) : (
+                  <Button
+                    type="submit"
+                    label="Login"
+                    className="p-button-success w-full mt-4 bg-violet-900 transition duration-300 font-bold text-lg text-white px-4 py-2 rounded-md uppercase"
+                    disabled={isSubmitting}
+                  />
+                )}
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </div>
     </div>
   );
 };
