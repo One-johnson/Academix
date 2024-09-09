@@ -65,8 +65,8 @@ const Login = () => {
       {/* Right side with Form */}
       <div className="w-2/5 bg-violet-900 flex justify-center items-center">
         <div className="max-w-lg w-full p-6 bg-white rounded-xl mx-8 shadow-xl">
-          <div className="flex items-center justify-center text-violet-900 mb-6">
-            <i className="pi pi-sign-in mr-4 text-3xl" />
+          <div className="flex items-center justify-center text-violet-900 mb-8">
+            <i className="pi pi-lock mr-4 text-3xl" />
             <h2 className="text-3xl font-bold">Admin Login</h2>
           </div>
           <Formik
@@ -80,15 +80,15 @@ const Login = () => {
                 <div className="flex items-center">
                   <div className="p-float-label flex-1">
                     <Field
-                      name="username"
+                      name="email"
                       as={InputText}
-                      id="username"
+                      id="email"
                       className={fieldStyle}
                     />
-                    <label htmlFor="username">Email</label>
+                    <label htmlFor="email">Email</label>
                   </div>
                   <ErrorMessage
-                    name="username"
+                    name="email"
                     component="small"
                     className="p-error ml-2 text-red-600"
                   />

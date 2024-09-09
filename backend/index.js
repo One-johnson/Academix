@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const fileRoutes = require("./routes/fileRoutes"); // Import the routes
-const authRoutes = require("./routes/authRoutes");
+const registerRoutes = require("./routes/registerRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Use the file routes
 app.use("/api", fileRoutes); // Prefix all routes with /api
-app.use("/api", authRoutes);
+app.use("/api", registerRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

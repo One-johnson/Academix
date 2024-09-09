@@ -1,7 +1,7 @@
 // routes/authRoutes.js
 
 const express = require("express");
-const { registerUser } = require("../controllers/authController"); // Import the controller
+const { registerUser } = require("../controllers/registerController"); // Import the controller
 
 const router = express.Router();
 
