@@ -6,9 +6,10 @@ const Student = sequelize.define(
   "Student",
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID, // Use UUID for consistency
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+
     },
     registrationDate: {
       type: DataTypes.DATE,
@@ -77,7 +78,7 @@ const Student = sequelize.define(
       defaultValue: "Fresher",
     },
     currentClassId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       references: {
         model: Class,
         key: "id",

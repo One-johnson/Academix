@@ -1,14 +1,15 @@
+// models/teacherModel.js
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db"); // Import the configured Sequelize instance
-const Class = require("./classModel"); // Import the Class model
+const sequelize = require("../config/db"); // Import your database configuration
 
+// Define Teacher model
 const Teacher = sequelize.define(
   "Teacher",
   {
     id: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+      type: DataTypes.UUID, // Use UUID for a unique identifier
+      defaultValue: DataTypes.UUIDV4, // Automatically generate a unique identifier
+      primaryKey: true, // Define as primary key
     },
     fullName: {
       type: DataTypes.STRING,
@@ -77,14 +78,5 @@ const Teacher = sequelize.define(
     timestamps: true,
   }
 );
-
-Teacher.belongsToMany(Class, {
-  through: "ClassTeachers",
-  foreignKey: "teacherId",
-});
-Class.belongsToMany(Teacher, {
-  through: "ClassTeachers",
-  foreignKey: "classId",
-});
 
 module.exports = Teacher;
