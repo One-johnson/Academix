@@ -3,12 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const sequelize = require("./config/db"); // Import Sequelize instance
 const fileRoutes = require("./routes/fileRoutes");
-const registerRoutes = require("./routes/registerRoutes");
-const loginRoutes = require("./routes/loginRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const parentRoutes = require("./routes/parentRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,9 +17,8 @@ app.use(cors());
 app.use(express.json());
 
 // Use the routes
-app.use("/api", fileRoutes);
-app.use("/api", registerRoutes);
-app.use("/api", loginRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/files", fileRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/events", eventRoutes);

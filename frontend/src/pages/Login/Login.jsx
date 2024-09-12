@@ -28,7 +28,7 @@ const Login = () => {
 
       // API call to login the user
       const response = await axios.post(
-        "http://localhost:5000/api/login",
+        "http://localhost:5000/api/users/login",
         values
       );
 

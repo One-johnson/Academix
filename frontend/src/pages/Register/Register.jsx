@@ -28,7 +28,7 @@ const Register = () => {
 
       // API call to register the user
       const response = await axios.post(
-        "http://localhost:5000/api/register",
+        "http://localhost:5000/api/users/register",
         values
       );
 
@@ -37,7 +37,7 @@ const Register = () => {
         // Additional delay to keep the spinner showing for a little longer
         setTimeout(() => {
           setLoading(false); // Stop the loading spinner
-          navigate("/login"); // Navigate to login page after successful registration
+          navigate("/"); // Navigate to login page after successful registration
         }, 1500); // Delay for UX effect (1.5 seconds)
       } else {
         console.error("Unexpected response:", response);
@@ -141,7 +141,12 @@ const Register = () => {
 
                 {/* Submit Button or Spinner */}
                 {loading ? (
-                  <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+                  <ProgressSpinner
+                    style={{ width: "50px", height: "50px" }}
+                    strokeWidth="8"
+                    fill="var(--surface-ground)"
+                    animationDuration=".5s"
+                  />
                 ) : (
                   <Button
                     type="submit"
