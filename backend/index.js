@@ -7,8 +7,8 @@ const registerRoutes = require("./routes/registerRoutes");
 const loginRoutes = require("./routes/loginRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const studentRoutes = require("./routes/studentRoutes");
-const Student = require('./models/studentModel'); // Import Student model
-const Class = require('./models/classModel'); // Import Class model
+const eventRoutes = require("./routes/eventRoutes");
+const parentRoutes = require("./routes/parentRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +23,8 @@ app.use("/api", registerRoutes);
 app.use("/api", loginRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use("/api/students", studentRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/parents", parentRoutes);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
