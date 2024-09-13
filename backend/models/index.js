@@ -1,11 +1,12 @@
-const sequelize = require('../config/db'); // Import your database configuration
+const sequelize = require("../config/db"); // Import your database configuration
 
 // Import all models
-const Teacher = require('./teacherModel');
-const Class = require('./classModel');
-const Student = require('./studentModel');
-const Parent = require('./parentModel');
-const Event = require('./eventModel');
+const Teacher = require("./teacherModel");
+const Class = require("./classModel");
+const Student = require("./studentModel");
+const Parent = require("./parentModel");
+const Event = require("./eventModel");
+const Grade = require("./gradeModel");
 
 // Define many-to-many relationships
 Teacher.belongsToMany(Class, {
@@ -31,6 +32,9 @@ Class.hasMany(Student, { foreignKey: "currentClassId", as: "students" });
 Student.belongsTo(Parent, { foreignKey: "parentGuardianId", as: "parent" });
 Parent.hasMany(Student, { foreignKey: "parentGuardianId", as: "students" });
 
+Grade.belongsTo(Student, { foreignKey: "studentId", as: "student" });
+Student.hasMany(Grade, { foreignKey: "studentId", as: "grades" });
+
 // Export models for use in other parts of the application
 module.exports = {
   sequelize,
@@ -39,4 +43,5 @@ module.exports = {
   Student,
   Parent,
   Event,
+  Grade,
 };
