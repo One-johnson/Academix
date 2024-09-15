@@ -1,7 +1,7 @@
 // index.js or server.js
 const express = require("express");
 const cors = require("cors");
-const sequelize = require("./config/db"); // Import Sequelize instance
+const sequelize = require("./config/db");
 const fileRoutes = require("./routes/fileRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const studentRoutes = require("./routes/studentRoutes");

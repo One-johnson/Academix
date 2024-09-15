@@ -122,6 +122,7 @@ const Register = () => {
                       as={InputText}
                       id="password"
                       className={fieldStyle}
+                      
                     />
                     <label htmlFor="password">Password</label>
                   </div>
