@@ -1,17 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const studentController = require("../controllers/studentController");
-const { validateStudent } = require("../validation/studentValidator"); // Import validation middleware
-const { validationResult } = require("express-validator"); // Import express-validator helper
+const { validateStudent } = require("../validation/studentValidator");
 
-// Middleware to handle validation results
-const handleValidation = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-};
+const handleValidation = require("../middleware/handleValidation");
 
 // Route to add a new student with validation
 router.post(
@@ -36,7 +28,6 @@ router.put(
 );
 // Route to assign a student to a class
 router.post("/assign", studentController.assignToClass);
-
 
 // Route to delete a student by ID
 router.delete("/:id", studentController.deleteStudent);

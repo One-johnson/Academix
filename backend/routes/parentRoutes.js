@@ -1,32 +1,33 @@
-const express = require('express');
-const { validateParent } = require('../validation/parentValidator'); // Import validation middleware
-const { validationResult } = require('express-validator'); // Import express-validator helper
-const parentController = require('../controllers/parentController');
+const express = require("express");
+const { validateParent } = require("../validation/parentValidator");
+const parentController = require("../controllers/parentController");
+const handleValidation = require("../middleware/handleValidation");
 
 const router = express.Router();
 
-// Middleware to handle validation results
-const handleValidation = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-};
-
 // Add a new parent with validation
-router.post('/add', validateParent, handleValidation, parentController.addParent);
+router.post(
+  "/add",
+  validateParent,
+  handleValidation,
+  parentController.addParent
+);
 
 // Get all parents
-router.get('/all', parentController.getAllParents);
+router.get("/all", parentController.getAllParents);
 
 // Get a parent by ID
-router.get('/:id', parentController.getParentById);
+router.get("/:id", parentController.getParentById);
 
 // Update a parent by ID with validation
-router.put('/:id', validateParent, handleValidation, parentController.updateParent);
+router.put(
+  "/:id",
+  validateParent,
+  handleValidation,
+  parentController.updateParent
+);
 
 // Delete a parent by ID
-router.delete('/:id', parentController.deleteParent);
+router.delete("/:id", parentController.deleteParent);
 
 module.exports = router;

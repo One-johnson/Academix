@@ -1,18 +1,9 @@
 const express = require("express");
 const { validateEvent } = require("../validation/eventValidator");
-const { validationResult } = require("express-validator");
 const eventController = require("../controllers/eventController");
+const handleValidation = require("../middleware/handleValidation");
 
 const router = express.Router();
-
-// Middleware to handle validation results
-const handleValidation = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-};
 
 // Create a new event with validation
 router.post(

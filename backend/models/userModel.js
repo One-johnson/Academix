@@ -4,8 +4,8 @@ const sequelize = require("../config/db"); // Import your Sequelize instance
 // Define the User model
 const User = sequelize.define("User", {
   id: {
-    type: DataTypes.UUID, // Use UUID for a unique identifier
-    defaultValue: DataTypes.UUIDV4, // Automatically generate a unique identifier
+    type: DataTypes.UUID, 
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true, // Define as primary key
   },
   username: {

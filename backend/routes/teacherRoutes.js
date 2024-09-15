@@ -2,15 +2,7 @@ const express = require("express");
 const router = express.Router();
 const teacherController = require("../controllers/teacherController");
 const { validateTeacher } = require("../validation/teacherValidator");
-const { validationResult } = require("express-validator");
-
-const handleValidation = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
-};
+const handleValidation = require("../middleware/handleValidation");
 
 // Route to add a new teacher with validation
 router.post(
