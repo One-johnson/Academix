@@ -1,12 +1,19 @@
-const Event = require('../models/eventModel');
+const Event = require("../models/eventModel");
 
-// Add a new event
-exports.addEvent = async (req, res) => {
+// Create a new event
+exports.createEvent = async (req, res) => {
   try {
-    const newEvent = await Event.create(req.body);
-    res.status(201).json(newEvent);
+    const { title, description, date, location, status } = req.body;
+    const event = await Event.create({
+      title,
+      description,
+      date,
+      location,
+      status,
+    });
+    res.status(201).json(event);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -16,53 +23,56 @@ exports.getAllEvents = async (req, res) => {
     const events = await Event.findAll();
     res.status(200).json(events);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Get a single event by ID
+// Get an event by ID
 exports.getEventById = async (req, res) => {
   try {
-    const event = await Event.findByPk(req.params.id);
+    const { id } = req.params;
+    const event = await Event.findByPk(id);
     if (event) {
       res.status(200).json(event);
     } else {
-      res.status(404).json({ error: 'Event not found' });
+      res.status(404).json({ error: "Event not found" });
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Update an event
+// Update an event by ID
 exports.updateEvent = async (req, res) => {
   try {
-    const [updated] = await Event.update(req.body, {
-      where: { id: req.params.id },
-    });
+    const { id } = req.params;
+    const { title, description, date, location, status } = req.body;
+    const [updated] = await Event.update(
+      { title, description, date, location, status },
+      { where: { id } }
+    );
     if (updated) {
-      const updatedEvent = await Event.findByPk(req.params.id);
+      const updatedEvent = await Event.findByPk(id);
       res.status(200).json(updatedEvent);
     } else {
-      res.status(404).json({ error: 'Event not found' });
+      res.status(404).json({ error: "Event not found" });
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Delete an event
+// Delete an event by ID
 exports.deleteEvent = async (req, res) => {
   try {
-    const deleted = await Event.destroy({
-      where: { id: req.params.id },
-    });
+    const { id } = req.params;
+    const deleted = await Event.destroy({ where: { id } });
     if (deleted) {
-      res.status(204).send(); // No content
+      res.status(204).send();
     } else {
-      res.status(404).json({ error: 'Event not found' });
+      res.status(404).json({ error: "Event not found" });
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
