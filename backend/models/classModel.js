@@ -1,15 +1,14 @@
 // models/classModel.js
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db"); // Import your database configuration
+const sequelize = require("../config/db");
 
-// Define Class model
 const Class = sequelize.define(
   "Class",
   {
     id: {
-      type: DataTypes.UUID, // Use UUID for a unique identifier
-      defaultValue: DataTypes.UUIDV4, // Automatically generate a unique identifier
-      primaryKey: true, // Define as primary key
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,

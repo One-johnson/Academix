@@ -3,8 +3,8 @@ const sequelize = require("../config/db");
 const Student = require("./studentModel");
 const Class = require("./classModel");
 
-const Grade = sequelize.define(
-  "Results",
+const Result = sequelize.define(
+  "Result",
   {
     id: {
       type: DataTypes.UUID, // Use UUID for consistency
@@ -20,7 +20,7 @@ const Grade = sequelize.define(
       allowNull: false,
     },
     term: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM("Term 1", "Term 2", "Term 3"), // Use ENUM for predefined term values
       allowNull: false,
     },
     year: {
@@ -35,13 +35,19 @@ const Grade = sequelize.define(
       },
       allowNull: false,
     },
+    classId: {  // Optionally, relate results to a class
+      type: DataTypes.UUID,
+      references: {
+        model: Class,
+        key: "id",
+      },
+      allowNull: true, // Optional, as not all results might need a class
+    },
   },
   {
-    tableName: "results",
+    tableName: "results", // Keep this plural to match existing database convention
     timestamps: true,
   }
 );
 
-
-
-module.exports = Grade;
+module.exports = Result;

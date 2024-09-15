@@ -1,5 +1,5 @@
-const Student = require('../models/studentModel');
-const Class = require('../models/classModel'); // Import the Class model
+const Student = require("../models/studentModel");
+const Class = require("../models/classModel");
 
 // Add a new student
 exports.addStudent = async (req, res) => {
@@ -29,7 +29,7 @@ exports.getStudentById = async (req, res) => {
     if (student) {
       res.status(200).json(student);
     } else {
-      res.status(404).json({ error: 'Student not found.' });
+      res.status(404).json({ error: "Student not found." });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -47,7 +47,7 @@ exports.updateStudent = async (req, res) => {
       const updatedStudent = await Student.findByPk(id);
       res.status(200).json(updatedStudent);
     } else {
-      res.status(404).json({ error: 'Student not found.' });
+      res.status(404).json({ error: "Student not found." });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -62,9 +62,11 @@ exports.assignToClass = async (req, res) => {
     const classObj = await Class.findByPk(classId);
     if (student && classObj) {
       await student.setClass(classObj); // Assuming you have setClass method defined
-      res.status(200).json({ message: 'Student assigned to class successfully.' });
+      res
+        .status(200)
+        .json({ message: "Student assigned to class successfully." });
     } else {
-      res.status(404).json({ error: 'Student or Class not found.' });
+      res.status(404).json({ error: "Student or Class not found." });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -76,12 +78,12 @@ exports.deleteStudent = async (req, res) => {
   const { id } = req.params;
   try {
     const deleted = await Student.destroy({
-      where: { id }
+      where: { id },
     });
     if (deleted) {
       res.status(204).json(); // No content
     } else {
-      res.status(404).json({ error: 'Student not found.' });
+      res.status(404).json({ error: "Student not found." });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });

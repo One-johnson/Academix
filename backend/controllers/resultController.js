@@ -1,9 +1,10 @@
-const Grade = require("../models/resultModel");
+const Result = require("../models/resultModel");
+const Student = require("../models/studentModel");
 
 // Add a new grade
 exports.addGrade = async (req, res) => {
   try {
-    const newGrade = await Grade.create(req.body);
+    const newGrade = await Result.create(req.body);
     res.status(201).json(newGrade);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -14,8 +15,12 @@ exports.addGrade = async (req, res) => {
 exports.getGradesForStudent = async (req, res) => {
   const { studentId } = req.params;
   try {
-    const grades = await Grade.findAll({ where: { studentId } });
-    res.status(200).json(grades);
+    const grades = await Result.findAll({ where: { studentId } });
+    if (grades.length > 0) {
+      res.status(200).json(grades);
+    } else {
+      res.status(404).json({ error: "No grades found for this student." });
+    }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -25,7 +30,7 @@ exports.getGradesForStudent = async (req, res) => {
 exports.getGradesForClass = async (req, res) => {
   const { classId } = req.params;
   try {
-    const grades = await Grade.findAll({
+    const grades = await Result.findAll({
       include: [
         {
           model: Student,
@@ -33,7 +38,11 @@ exports.getGradesForClass = async (req, res) => {
         },
       ],
     });
-    res.status(200).json(grades);
+    if (grades.length > 0) {
+      res.status(200).json(grades);
+    } else {
+      res.status(404).json({ error: "No grades found for this class." });
+    }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -45,10 +54,10 @@ exports.updateGrade = async (req, res) => {
   const updatedData = req.body;
 
   try {
-    const [updated] = await Grade.update(updatedData, { where: { id } });
+    const [updated] = await Result.update(updatedData, { where: { id } });
 
     if (updated) {
-      const updatedGrade = await Grade.findOne({ where: { id } });
+      const updatedGrade = await Result.findOne({ where: { id } });
       res.status(200).json(updatedGrade);
     } else {
       res.status(404).json({ error: "Grade not found" });
@@ -62,9 +71,9 @@ exports.updateGrade = async (req, res) => {
 exports.deleteGrade = async (req, res) => {
   const { id } = req.params;
   try {
-    const deleted = await Grade.destroy({ where: { id } });
+    const deleted = await Result.destroy({ where: { id } });
     if (deleted) {
-      res.status(204).send();
+      res.status(204).send(); // Send no content response
     } else {
       res.status(404).json({ error: "Grade not found" });
     }
